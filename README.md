@@ -142,10 +142,10 @@ extensively in development with sbt, but switched last minute to Maven for a dif
 
 ### What Would I do Better
 
-IThere are several things I wanted to give more attention, but time did not allow.
+There are several things I wanted to give more attention, but time did not allow.
 
-1. *Tests are not running in Maven*
-* I had an issue in the last hour getting SBT to build a full assembly with all dependencies.
+1. *Tests are not running in Maven* (shaking my head in shame...)
+*   I had an issue in the last hour getting SBT to build a full assembly with all dependencies.
   I knew how to do this in Maven, so promptly switched in order to use the shade plugin. This 
   fixed the first problem, but I was not able to get the Maven Scalatest plugin to function
   correctly. Thereby rendering my tests less-than-useful in the current submission. 
@@ -155,14 +155,14 @@ IThere are several things I wanted to give more attention, but time did not allo
   could be fixed relatively quickly.
   
 2. *Performance Tuning*
-* While the given solution runs and produces output, I did not spend much time worrying about 
+*   While the given solution runs and produces output, I did not spend much time worrying about 
 performance. While this is a one-time batch job, perhaps performance is low on the priority list,
 but after wiring in the test with Maven, second order would be to address performance. I would
 approach this both from a configuration tuning angle, and a dataset partitioning and caching angle.
 I know there are at least a couple inefficient operations going on.
 
 3. *Run on a cluster*
-* While I'll made an assumption about the requirements leading toward a stand-alone Spark instance,
+*   While I'll made an assumption about the requirements leading toward a stand-alone Spark instance,
 I would have like use docker compose to build a cluster and submit the job. I did get this working
 in a lab environment, but was not able to wire it all up for efficient deployment.
 
