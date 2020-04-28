@@ -58,10 +58,9 @@ RUN wget http://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/ap
   mv apache-maven-$MAVEN_VERSION /usr/lib/mvn
 
 
-COPY ../spark-log-processing/ /project/
+COPY project/ /project/
 
-WORKDIR /project/spark-log-processing/
+WORKDIR /project
 
-#RUN git clone https://github.com/npetty/spark-log-processing /project/spark-log-processing
+RUN chmod 755 /project/run-top-n.sh
 
-#ENTRYPOINT ["/usr/local/bin/sbt"]
