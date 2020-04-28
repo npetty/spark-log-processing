@@ -93,8 +93,41 @@ vi /project/conf/application.conf
 ```
 
 
+## What Would I do Better
+
+There are several things I would have liked to given more attention, but time did not allow.
+
+1. *Tests are not running in Maven*
+* I had an issue in the last hour getting SBT to build a full assembly with all dependencies.
+  I knew how to do this in Maven, so promptly switched in order to use the shade plugin. This 
+  fixed the first problem, but I was not able to get the Maven Scalatest plugin to function
+  correctly. Thereby rendering my tests less-than-useful in the current submission. 
+  
+  With SBT tests were running smoothly, so I can at least claim that the code is there and was
+  used during my development at least a couple times to catch an inadvertant bug. I feel this 
+  could be fixed relatively quickly.
+  
+2. *Performance Tuning*
+* While the given solution runs and produces output, I did not spend much time worrying about 
+performance. While this is a one-time batch job, perhaps performance is low on the priority list,
+but after wiring in the test with Maven, second order would be to address performance. I would
+approach this both from a configuration tuning angle, and a dataset partitioning and caching angle.
+I know there are at least a couple inefficient operations going on.
+
+3. *Run on a cluster*
+* While I'll made an assumption about the requirements leading toward a stand-alone Spark instance,
+I would have like use docker compose to build a cluster and submit the job. I did get this working
+in a lab environment, but was not able to wire it all up for efficient deployment.
+
+
 ## Skip To The Result
 
-All of those steps can take some time to complete. The clean docker build + maven install can take several minutes. 
-For the impatient I've posted some screenshots from each step.
+For the impatient or those who don't have access right now to a host with Docker, I've provided a few
+screenshots below to follow along the process.
+
+* Pull Docker Container
+
+* Execute the run script
+
+* View the output
 
