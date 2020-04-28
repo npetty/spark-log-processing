@@ -43,7 +43,7 @@ Pull from DockerHub and run the image
 
 ```
 
-#### Option 2: Build from source: Slow but thorough
+#### Option 2: Build everything from source (including Docker image): Slow but thorough
 1. Clone this github repository to a host with the pre-reqs from above.
 
 ```dtd
@@ -55,7 +55,7 @@ because they are compatible with the version of Spark I used 2.4.5-bin-hadoop2.7
 
 ```dtd
 cd spark-log-processing
-docker build -t top-n-app/scala:latest --build-arg SCALA_VERSION=2.11.2 --build-arg SBT_VERSION=1.2.7 .
+docker build -t top-n-app/app:localbuild --build-arg SCALA_VERSION=2.11.2 --build-arg SBT_VERSION=1.2.7 .
 ```
 * Note this image builds SBT and Maven. Near the end of the project I had an issue with the sbt plugin
 used to build assemblies, which caused problems building the shaded uber jar for this project. I switched
@@ -63,12 +63,12 @@ to building with Maven last minute but left both dependencies to allow for easie
 issue is resolved.
 
 3. Run the newly created docker image
-    
      
 ```dtd
-docker run --rm -it --name spark-stand-alone --hostname spark-stand-alone -p 7077:7077 -p 8080:8080 top-n-app/scala:latest /bin/sh
+docker run --rm -it --name spark-stand-alone --hostname spark-stand-alone -p 7077:7077 -p 8080:8080 top-n-app/app:localbuild /bin/sh
 ```
-* This command will start the container and drop you in a bash shell in the spark-log-processing directory.
+
+This command will start the container and drop you in a bash shell in the /project directory.
     
 4. Build the code
     * From the shell in the container, cd into the code directory and build with maven.
@@ -79,23 +79,22 @@ mvn install
 ``` 
 
 5. Optionally update the number N for Top-N users/visitors (with your preferred editor)
-
+The value is nested in my.challenge.app.n (you'll find it!).
 ```
 vi /project/conf/application.conf
-
-# Edit value in conf file for n. Default is set to 5.
 ```
 
 5. Submit the spark job in local mode
 
 ```dtd
-/spark/bin/spark-submit --master local[1] --driver-class-path=/project/conf/ --class my.challenge.TopN target/top-n-app-1.0.jar
+/spark/bin/spark-submit --master local[1] --driver-class-path=/project/conf/ --class my.challenge.TopN /project/project_code/target/top-n-app-1.0.jar
 ```
-
 
 ## What Would I do Better
 
-There are several things I would have liked to given more attention, but time did not allow.
+I think the code and tests are decently documented, so I won't go into all the details. However,
+I wanted to point out a few things that I would have done better. There are several things I wanted
+to give more attention, but time did not allow.
 
 1. *Tests are not running in Maven*
 * I had an issue in the last hour getting SBT to build a full assembly with all dependencies.
@@ -118,6 +117,10 @@ I know there are at least a couple inefficient operations going on.
 * While I'll made an assumption about the requirements leading toward a stand-alone Spark instance,
 I would have like use docker compose to build a cluster and submit the job. I did get this working
 in a lab environment, but was not able to wire it all up for efficient deployment.
+
+4. *Scaladocs*
+* This was on my list the whole time, but I did not get to it. This would be another quick activity
+to provide more detail.
 
 
 ## Skip To The Result
