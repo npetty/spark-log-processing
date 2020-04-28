@@ -114,13 +114,13 @@ The code has four main files
     * Create a dataframes ranking each url/visitor by day.
     * Join these datasets by day and rank to produce a single dataframe for display
     * Query the final dataset to retrieve rows with rank <= N.
-1.  **my.challenge.DataGrabber**
+2.  **my.challenge.DataGrabber**
 * This class is a utility for loading data. It was needed because I ran into issues using an ftp:// URL directly
 with sc.textFile. It matches on the input string to determine which data loading method to use.
-1. **my.challenge.LogEntry**
+3. **my.challenge.LogEntry**
 * This file declares a case class to capture LogEntries and a companion object to perform the parsing. I found several
 example regexes for parsing access logs, but did a little tweaking to be more open on what was allowed.
-1. **my.challenge.TopNCalculator**
+4. **my.challenge.TopNCalculator**
 * This class has methods that capture the grouping/joining/query logic, therefore it was useful to have a separate
 class with functions that could be tested. Specifically it defines functions called
     * rankByDay
