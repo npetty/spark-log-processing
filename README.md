@@ -11,7 +11,19 @@ The code is available in this github repo: https://github.com/npetty/spark-log-p
 
 ### Assumptions
 First lets list some assumptions made during the development of this solution:
-           
+
+1. Output displayed to user is final. 
+    * It would not be difficult to save the resulting dataframe as a csv or parquet file for storage,
+      but given the nature of the project, the result set is printed to the console for delivery.
+2. Output format is a single table listing both URL and visitor with the same rank on one row. In case of a tie rank,
+   the rank is shared. This causes occasional nulls to be seen in the output when a rank is skipped in one column but
+   not the other. This is by design and not an error.
+2. All HTTP Status Codes are considered. I could see an argument to remove 404 Not Found codes or even be more
+   restrictive, but in this case I kept all codes in the dataset.
+    * Various codes could be easily removed with a filter, so this did not impact design.
+4. This solution runs Spark in local mode. The requirements stated deployment in a docker container, so I opted for 
+   a stand-alone spark instance rather than a cluster. I tried out a cluster configuration and have the dockerfiles 
+   and docker-compose.yml file available, but this seemed to go against the single container deployment.
     
 ### Pre-reqs
 Previously installed packages:
@@ -39,9 +51,7 @@ to building with Maven last minute but left both dependencies to allow for easie
 issue is resolved.
 
 3. Run the newly created docker image
-    * The requirements stated deployment in a docker container, so I opted for a stand-alone spark instance
-    rather than the cluster. I did test out this configuration and have the dockerfiles and docker-compose.yml
-    file as a possible extension.
+    
      
 ```dtd
 docker run --rm -it --name spark-stand-alone --hostname spark-stand-alone -p 7077:7077 -p 8080:8080 top-n-app/scala:latest /bin/sh
@@ -67,7 +77,7 @@ vi /project/conf/application.conf
 5. Submit the spark job in local mode
 
 ```dtd
-/spark/bin/spark-submit --master local[1] --driver-class-path=/project/conf/ --class my.challenge.TopN target/top-n-app-1.0-SNAPSHOT.jar
+/spark/bin/spark-submit --master local[1] --driver-class-path=/project/conf/ --class my.challenge.TopN target/top-n-app-1.0.jar
 ```
 
 
