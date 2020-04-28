@@ -34,14 +34,26 @@ Previously installed packages:
 * Git (if you want to build from source) 
 
 ### Running the solution
-
+1. Run the Docker image published to my DockerHub repo.
+1. Pull everything from GitHub and build from scratch.
 
 #### Option 1: Run published Docker image: Quickest Way
 Pull from DockerHub and run the image
 
 ```dtd
-
+docker run --rm -it --name spark-stand-alone --hostname spark-stand-alone -p 7077:7077 -p 8080:8080 nmpetty/top-n-app:1.0 /bin/sh
 ```
+
+Assuming you don't already have an imaged with the same name locally, this will be my image from docker hub, start it
+up, and drop you in a shell.
+
+From here, you could open up the app-readme.txt file for instructions, but it will tell you to run the script in
+the same dir.
+```dtd
+./run-top-n-app.sh
+```
+Then sit back and watch it run (for longer than I would like). Later I'll mention that I'm not happy with the run 
+performance... :(
 
 #### Option 2: Build everything from source (including Docker image): Slow but thorough
 1. Clone this github repository to a host with the pre-reqs from above.
@@ -90,11 +102,47 @@ vi /project/conf/application.conf
 /spark/bin/spark-submit --master local[1] --driver-class-path=/project/conf/ --class my.challenge.TopN /project/project_code/target/top-n-app-1.0.jar
 ```
 
-## What Would I do Better
+## Project Overview
 
-I think the code and tests are decently documented, so I won't go into all the details. However,
-I wanted to point out a few things that I would have done better. There are several things I wanted
-to give more attention, but time did not allow.
+### Code Structure
+The code has four main files
+
+1. **my.challenge.TopN**
+* This file extends the App class and is the main driver for the application. The flow of execution follows:
+    * Set config from file
+    * Load data set while calling the LogEntry parser to return structured rows.
+    * Create a dataframes ranking each url/visitor by day.
+    * Join these datasets by day and rank to produce a single dataframe for display
+    * Query the final dataset to retrieve rows with rank <= N.
+1.  **my.challenge.DataGrabber**
+* This class is a utility for loading data. It was needed because I ran into issues using an ftp:// URL directly
+with sc.textFile. It matches on the input string to determine which data loading method to use.
+1. **my.challenge.LogEntry**
+* This file declares a case class to capture LogEntries and a companion object to perform the parsing. I found several
+example regexes for parsing access logs, but did a little tweaking to be more open on what was allowed.
+1. **my.challenge.TopNCalculator"
+* This class has methods that capture the grouping/joining/query logic, therefore it was useful to have a separate
+class with functions that could be tested. Specifically it defines functions called
+    * rankByDay
+    * joinDfsOnDayAndRank
+    * buildSqlQuery
+These perform the dataframe operations described in their names.
+
+### Testing
+
+I created test classes for
+* TopNCalculator
+* LogEntry
+
+These contained nearly all of the application logic, so there is good coverage on that part. I did not want to test
+the Spark framework, so did not create a test class for DataGrabber or the driver, TopN.
+
+I am embarrassed that the tests are not currently working with Maven test. Like I will mention below, I was using them
+extensively in development with sbt, but switched last minute to Maven for a different issue. Apologies for this!
+
+### What Would I do Better
+
+IThere are several things I wanted to give more attention, but time did not allow.
 
 1. *Tests are not running in Maven*
 * I had an issue in the last hour getting SBT to build a full assembly with all dependencies.
@@ -129,8 +177,26 @@ For the impatient or those who don't have access right now to a host with Docker
 screenshots below to follow along the process.
 
 * Pull Docker Container
+![image](https://user-images.githubusercontent.com/14127655/80536794-889fce80-8968-11ea-8539-801fbdcd52a6.png)
 
-* Execute the run script
+* Execute the run script (N = 5)
+![image](https://user-images.githubusercontent.com/14127655/80536515-1a5b0c00-8968-11ea-9f67-8ad36281f0f1.png)
 
 * View the output
+![topn-logs-2](https://user-images.githubusercontent.com/14127655/80536574-3199f980-8968-11ea-9945-aa91fd3afd6d.PNG)
 
+and some more...
+
+![topn-out2](https://user-images.githubusercontent.com/14127655/80536610-3e1e5200-8968-11ea-9f99-252842a44c0d.PNG)
+
+... and some more
+
+![topn-out3](https://user-images.githubusercontent.com/14127655/80536653-4f675e80-8968-11ea-9e19-b368ba56125e.PNG)
+
+... and finally
+
+![topn-out4](https://user-images.githubusercontent.com/14127655/80536680-5aba8a00-8968-11ea-8a8d-11f0c3ccc8c2.PNG)
+
+Thank you for reading, this was fun!!
+
+-Nick
