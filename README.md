@@ -1,4 +1,4 @@
-# spark-docker
+# spark-log-processing
 Using scala/spark to analyze an httpd log dataset and deploying as a dockerfile.
 
 ## Problem Statement
@@ -9,6 +9,10 @@ the application in a docker container.
 ## My Solution
 The code is available in this github repo: https://github.com/npetty/spark-log-processing.git
 
+### Assumptions
+First lets list some assumptions made during the development of this solution:
+           
+    
 ### Pre-reqs
 Previously installed packages:
 * Git for initial pull 
@@ -65,3 +69,10 @@ vi /project/conf/application.conf
 ```dtd
 /spark/bin/spark-submit --master local[1] --driver-class-path=/project/conf/ --class my.challenge.TopN target/top-n-app-1.0-SNAPSHOT.jar
 ```
+
+
+## Skip To The Result
+
+All of those steps can take some time to complete. The clean docker build + maven install can take several minutes. 
+For the impatient I've posted some screenshots from each step.
+
