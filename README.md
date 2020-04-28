@@ -135,40 +135,32 @@ I created test classes for
 * LogEntry
 
 These contained nearly all of the application logic, so there is good coverage on that part. I did not want to test
-the Spark framework, so did not create a test class for DataGrabber or the driver, TopN.
+the Spark framework, so did not create a test class for DataGrabber or the driver, TopN. The DataGrabber class
+is a loose wrapper around the data loading methods available in Scala.
 
-I am embarrassed that the tests are not currently working with Maven test. Like I will mention below, I was using them
-extensively in development with sbt, but switched last minute to Maven for a different issue. Apologies for this!
+To run the tests, access the project_code directory and run 'mvn test'. Additionally, all tests will be run at build
+time using 'mvn install'. If any test fails, the package will not build.
 
 ### What Would I do Better
 
 There are several things I wanted to give more attention, but time did not allow.
-
-1. *Tests are not running in Maven* (shaking my head in shame...)
-*   I had an issue in the last hour getting SBT to build a full assembly with all dependencies.
-  I knew how to do this in Maven, so promptly switched in order to use the shade plugin. This 
-  fixed the first problem, but I was not able to get the Maven Scalatest plugin to function
-  correctly. Thereby rendering my tests less-than-useful in the current submission. 
   
-  With SBT tests were running smoothly, so I can at least claim that the code is there and was
-  used during my development at least a couple times to catch an inadvertant bug. I feel this 
-  could be fixed relatively quickly.
-  
-2. *Performance Tuning*
-*   While the given solution runs and produces output, I did not spend much time worrying about 
+1. *Performance Tuning*
+    *   While the given solution runs and produces output, I did not spend much time worrying about 
 performance. While this is a one-time batch job, perhaps performance is low on the priority list,
 but after wiring in the test with Maven, second order would be to address performance. I would
 approach this both from a configuration tuning angle, and a dataset partitioning and caching angle.
 I know there are at least a couple inefficient operations going on.
 
+2. *Integration Testing*
+    * There is always room for more testing. Currently, unit tests are applied to the logic functionality
+    within the application. However, I could have done more integration testing and even more on the unit
+    testing front to handle all the edge cases I can think of.  
+  
 3. *Run on a cluster*
-*   While I'll made an assumption about the requirements leading toward a stand-alone Spark instance,
+    *   While I'll made an assumption about the requirements leading toward a stand-alone Spark instance,
 I would have like use docker compose to build a cluster and submit the job. I did get this working
 in a lab environment, but was not able to wire it all up for efficient deployment.
-
-4. *Scaladocs*
-* This was on my list the whole time, but I did not get to it. This would be another quick activity
-to provide more detail.
 
 
 ## Skip To The Result
