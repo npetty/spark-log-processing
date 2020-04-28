@@ -22,7 +22,6 @@
 			<artifactId>scala-library</artifactId>
 			<groupId>org.scala-lang</groupId>
 			<version>${scala.version}</version>
-			<scope>provided</scope>
 		</dependency>
 	  <dependency>
 		  <groupId>com.typesafe</groupId>
@@ -33,15 +32,13 @@
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-core_2.11</artifactId>
-			<version>2.4.5</version>
-			<scope>provided</scope>
+			<version>${spark.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.spark/spark-sql_2.10 -->
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-sql_2.11</artifactId>
 			<version>${spark.version}</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- tests -->

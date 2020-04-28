@@ -10,28 +10,40 @@ the application in a docker container.
 The code is available in this github repo: https://github.com/npetty/spark-log-processing.git
 
 ### Assumptions
-First lets list some assumptions made during the development of this solution:
+The following assumptions were made during the development of this solution:
 
-1. Output displayed to user is final. 
-    * It would not be difficult to save the resulting dataframe as a csv or parquet file for storage,
-      but given the nature of the project, the result set is printed to the console for delivery.
-2. Output format is a single table listing both URL and visitor with the same rank on one row. In case of a tie rank,
-   the rank is shared. This causes occasional nulls to be seen in the output when a rank is skipped in one column but
-   not the other. This is by design and not an error.
-2. All HTTP Status Codes are considered. I could see an argument to remove 404 Not Found codes or even be more
-   restrictive, but in this case I kept all codes in the dataset.
-    * Various codes could be easily removed with a filter, so this did not impact design.
-4. This solution runs Spark in local mode. The requirements stated deployment in a docker container, so I opted for 
-   a stand-alone spark instance rather than a cluster. I tried out a cluster configuration and have the dockerfiles 
-   and docker-compose.yml file available, but this seemed to go against the single container deployment.
+1. **Final output is displayed in console.** 
+    * It would be a relatively simple update to save the resulting dataframe as a csv, parquet, or something similar
+      for storage and/or transmission but given the nature of the project, the end result set is printed to the console 
+      for delivery.
+2. **Output format is a single table with rows keyed and sorted on day and daily rank.**
+    * For the day/rank key, the corresponding URL and visitor (with counts) are shown. row lists URL and visitor with 
+    the same rank on one row. In case of a tie rank, the rank is shared. This causes occasional nulls to be seen in 
+    the output when a rank is skipped in one column but not the other. This is by design and not an error.
+2. **All HTTP Status Codes are considered.**
+    * I could see an argument to remove 404 Not Found codes or even be more restrictive, but in this case I kept all 
+    codes in the dataset. Various codes could be easily removed with a filter, so this did not impact design.
+4. **This solution runs Spark in local mode.**
+    * The requirements stated deployment in a docker container, so I opted for a stand-alone spark instance rather than 
+    a cluster. I tried out a cluster configuration and have the dockerfiles and docker-compose.yml file available, 
+    but this seemed to go against the single container deployment.
     
 ### Pre-reqs
 Previously installed packages:
-* Git for initial pull 
 * Docker
+* Git (if you want to build from source) 
 
 ### Running the solution
 
+
+#### Option 1: Run published Docker image: Quickest Way
+Pull from DockerHub and run the image
+
+```dtd
+
+```
+
+#### Option 2: Build from source: Slow but thorough
 1. Clone this github repository to a host with the pre-reqs from above.
 
 ```dtd

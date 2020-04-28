@@ -64,4 +64,6 @@ WORKDIR /project/spark-log-processing/
 
 RUN git clone https://github.com/npetty/spark-log-processing /project/spark-log-processing
 
+/spark/bin/spark-submit --master local[1] --driver-class-path=/project/spark-log-processing/conf --class my.challenge.TopN target/top-n-app-1.0-SNAPSHOT.jar
+
 #ENTRYPOINT ["/usr/local/bin/sbt"]

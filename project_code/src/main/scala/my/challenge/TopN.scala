@@ -66,7 +66,7 @@ object TopN extends App{
       ConfigFactory.load(extConfig)
      }
      else {
-      log.info("loaded internal config to override internal config")
+      log.info("loaded internal config")
       ConfigFactory.load().getConfig(MAIN_CONFIG_PATH)
      }
      val appName = if(config.hasPath(CONFIG_SPARK_APP)) config.getString(CONFIG_SPARK_APP) else DEFAULT_APP_NAME
