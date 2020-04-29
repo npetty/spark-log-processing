@@ -125,6 +125,9 @@ with sc.textFile. It matches on the input string to determine which data loading
 3. **my.challenge.LogEntry**
 * This file declares a case class to capture LogEntries and a companion object to perform the parsing. I found several
 example regexes for parsing access logs, but did a little tweaking to be more open on what was allowed.
+
+* Additionally, the log entry parses the timestamp string to produce a calculated Day column. This is used to 
+group entries by day for the top user calculations.
 4. **my.challenge.TopNCalculator**
 * This class has methods that capture the grouping/joining/query logic, therefore it was useful to have a separate
 class with functions that could be tested. Specifically it defines functions called
