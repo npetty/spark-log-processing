@@ -8,6 +8,7 @@ the application in a docker container.
 
 ## My Solution
 The code is available in this github repo: https://github.com/npetty/spark-log-processing.git
+
 The packaged docker container is on DockerHub at https://hub.docker.com/repository/docker/nmpetty/top-n-app
 
 ### Assumptions
