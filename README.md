@@ -18,14 +18,15 @@ The following assumptions were made during the development of this solution:
       for delivery.
 2. **Output format is a single table with rows keyed and sorted on day and daily rank.**
     * For the day/rank key, the corresponding URL and visitor (with counts) are shown. row lists URL and visitor with 
-    the same rank on one row. In case of a tie rank, the rank is shared. This causes occasional nulls to be seen in 
-    the output when a rank is skipped in one column but not the other. This is by design and not an error.
+      the same rank on one row. In case of a tie rank, the rank is shared. This causes occasional nulls to be seen in 
+      the output when a rank is skipped in one column but not the other. This is by design and not an error.
 2. **All HTTP Status Codes are considered.**
     * I could see an argument to remove 404 Not Found codes or even be more restrictive, but in this case I kept all 
-    codes in the dataset. Various codes could be easily removed with a filter, so this did not impact design.
+      codes in the dataset. It could be important to see a spike in requests for a page that is not found. Various codes
+      could be easily removed with a filter, so this did not impact design.
 4. **This solution runs Spark in local mode.**
     * The requirements stated deployment in a docker container, so I opted for a stand-alone spark instance rather than 
-    a cluster. I tried out a cluster configuration and have the dockerfiles and docker-compose.yml file available, 
+    a cluster. I tried out a cluster configuration and have the Dockerfiles and docker-compose.yml file available, 
     but this seemed to go against the single container deployment.
     
 ### Pre-reqs
@@ -34,8 +35,8 @@ Previously installed packages:
 * Git (if you want to build from source) 
 
 ### Running the solution
-1. Run the Docker image published to my DockerHub repo.
-1. Pull everything from GitHub and build from scratch.
+I have documented two approaches to running this application. One streamlined and straightforward, the other longer
+and more tedious, but ensures you are executing the source code.
 
 #### Option 1: Run published Docker image: Quickest Way
 Pull from DockerHub and run the image
@@ -44,8 +45,8 @@ Pull from DockerHub and run the image
 docker run --rm -it --name spark-stand-alone --hostname spark-stand-alone -p 7077:7077 -p 8080:8080 nmpetty/top-n-app:1.0 /bin/sh
 ```
 
-Assuming you don't already have an imaged with the same name locally, this will be my image from docker hub, start it
-up, and drop you in a shell.
+Assuming you don't already have an image with the same name locally, this will pull my image from DockerHub, start it
+up, and drop you in a shell within the /project directory.
 
 From here, you could open up the app-readme.txt file for instructions, but it will tell you to run the script in
 the same dir.
@@ -53,7 +54,8 @@ the same dir.
 ./run-top-n-app.sh
 ```
 Then sit back and watch it run (for longer than I would like). Later I'll mention that I'm not happy with the run 
-performance... :(
+performance... :( If you'd like to change the value for N, edit the conf/application.conf file as described in the 
+app-readme.txt file.
 
 #### Option 2: Build everything from source (including Docker image): Slow but thorough
 1. Clone this github repository to a host with the pre-reqs from above.
@@ -83,7 +85,8 @@ docker run --rm -it --name spark-stand-alone --hostname spark-stand-alone -p 707
 This command will start the container and drop you in a bash shell in the /project directory.
     
 4. Build the code
-    * From the shell in the container, cd into the code directory and build with maven.
+    * From the shell in the container, cd into the code directory and build with maven. With this option, you must
+    build the code because I did not check in the jar file to github.
     
 ```dtd
 cd project_code
@@ -105,7 +108,7 @@ vi /project/conf/application.conf
 ## Project Overview
 
 ### Code Structure
-The code has four main files
+The code has four main files described below and easily accessible above in the project_code dir for more detail.
 
 1. **my.challenge.TopN**
 * This file extends the App class and is the main driver for the application. The flow of execution follows:
@@ -155,13 +158,16 @@ I know there are at least a couple inefficient operations going on.
 2. *Integration Testing*
     * There is always room for more testing. Currently, unit tests are applied to the logic functionality
     within the application. However, I could have done more integration testing and even more on the unit
-    testing front to handle all the edge cases I can think of.  
+    testing front to handle all the edge cases I can think of. Additionally, I do not have automated tests
+    around the deployment phase with Docker. Building the image and deploying to DockerHub is not yet
+    automated.
   
 3. *Run on a cluster*
     *   While I'll made an assumption about the requirements leading toward a stand-alone Spark instance,
-I would have like use docker compose to build a cluster and submit the job. I did get this working
-in a lab environment, but was not able to wire it all up for efficient deployment.
-
+    I would have like use docker compose to build a cluster and submit the job. I did get this working
+    in a lab environment, but was not able to wire it all up for efficient deployment. If one had a working 
+    Spark cluster available, it would not be difficult to submit to that cluster.
+    
 
 ## Skip To The Result
 
