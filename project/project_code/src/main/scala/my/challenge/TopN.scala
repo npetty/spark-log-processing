@@ -146,8 +146,8 @@ object TopN extends App{
       *      equal to N.
       */
      log.info("Calculating ranks for columns")
-     val rankedUrl = calculator.rankByDay(accessRecords, URL_COL).persist()
-     val rankedHost = calculator.rankByDay(accessRecords, VISITOR_COL).persist()
+     val rankedUrl = calculator.rankByDay(accessRecords, URL_COL)
+     val rankedHost = calculator.rankByDay(accessRecords, VISITOR_COL)
 
      log.info("Joining the two dataframes")
      calculator.joinDfsOnDayAndRank(rankedUrl, rankedHost, URL_COL, VISITOR_COL)
@@ -165,6 +165,7 @@ object TopN extends App{
       calculator.buildSqlQuery(URL_COL, VISITOR_COL, FINAL_VIEW, my_n)
      )
 
+     finalResult.persist()
      finalResult.show(finalResult.count().toInt, false)
      log.info("Program exiting successfully")
     } catch {
